@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { post } = require('./src/routes/post');
+const postRouter = require('./routes/post');
 const PORT = process.env.PORT || 5000
 
 const app = express()
@@ -15,18 +15,19 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
 
 // Local Middlewares
-app.use("/post", post)
+app.use("/post", postRouter)
 
 // Config Database
 mongoose.connect(process.env.MONGODB_URL)
-    .then(() => { console.log('Database Connected') })
-    .catch(err => { console.log(err) })
+    .then(() => console.log('Database Connected'))
+    .catch(err => console.log(err))
 
 // Health Check
 app.get("/", (req, res) => {
     res.send("Hello World!")
 })
+
 // Listen Server
 app.listen(PORT, () => {
-    console.log(`Server is running on PORT: ${process.env.PORT}`)
+    console.log(`Server is running on PORT: ${PORT}`)
 })
